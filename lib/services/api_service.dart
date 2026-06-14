@@ -4,8 +4,7 @@ import 'package:http/http.dart' as http;
 import '../../models/boss.dart';
 import '../../models/weapon.dart';
 
-/// Wyjątek rzucany, gdy zapytanie do API się nie powiedzie.
-/// Zawiera czytelny komunikat, który można pokazać użytkownikowi.
+
 class ApiException implements Exception {
   final String message;
   ApiException(this.message);
@@ -14,18 +13,12 @@ class ApiException implements Exception {
   String toString() => message;
 }
 
-/// Serwis odpowiedzialny za komunikację z Elden Ring API
-/// (https://eldenring.fanapis.com).
-///
-/// Każda metoda wykonuje jedno zapytanie GET i mapuje odpowiedź JSON
-/// na odpowiednie modele danych. W przypadku błędu (brak internetu,
-/// błąd serwera, timeout) rzuca [ApiException] z czytelnym komunikatem.
+
 class ApiService {
   static const String _baseUrl = 'https://eldenring.fanapis.com/api';
   static const Duration _timeout = Duration(seconds: 10);
 
-  /// Pobiera listę bossów. Można podać [limit] (domyślnie 100, aby
-  /// pobrać możliwie pełną listę) oraz opcjonalną nazwę do wyszukania.
+
   Future<List<Boss>> getBosses({int limit = 100, String? name}) async {
     final uri = Uri.parse('$_baseUrl/bosses').replace(queryParameters: {
       'limit': limit.toString(),
@@ -37,13 +30,11 @@ class ApiService {
     return list.map((e) => Boss.fromJson(e as Map<String, dynamic>)).toList();
   }
 
-  /// Pobiera szczegóły jednego bossa po jego [id].
+
   Future<Boss> getBossDetails(String id) async {
     final uri = Uri.parse('$_baseUrl/bosses/$id');
     final data = await _getJson(uri);
 
-    // API dla pojedynczego elementu zwraca obiekt w polu "data"
-    // (a nie listę), dlatego obsługujemy obie możliwości.
     final dynamic body = data['data'];
     if (body is Map<String, dynamic>) {
       return Boss.fromJson(body);
@@ -53,7 +44,7 @@ class ApiService {
     throw ApiException('Nie znaleziono bossa o podanym identyfikatorze.');
   }
 
-  /// Pobiera listę broni. Można podać [limit] oraz opcjonalną nazwę.
+
   Future<List<Weapon>> getWeapons({int limit = 100, String? name}) async {
     final uri = Uri.parse('$_baseUrl/weapons').replace(queryParameters: {
       'limit': limit.toString(),
@@ -67,7 +58,7 @@ class ApiService {
         .toList();
   }
 
-  /// Pobiera szczegóły jednej broni po jej [id].
+
   Future<Weapon> getWeaponDetails(String id) async {
     final uri = Uri.parse('$_baseUrl/weapons/$id');
     final data = await _getJson(uri);
@@ -81,8 +72,7 @@ class ApiService {
     throw ApiException('Nie znaleziono broni o podanym identyfikatorze.');
   }
 
-  /// Wykonuje zapytanie GET pod podany adres i zwraca zdekodowany JSON.
-  /// Tłumaczy typowe błędy sieciowe na czytelne komunikaty w [ApiException].
+
   Future<Map<String, dynamic>> _getJson(Uri uri) async {
     try {
       final response = await http.get(uri).timeout(_timeout);

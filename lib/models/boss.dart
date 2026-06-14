@@ -1,9 +1,6 @@
 import 'dart:convert';
 
-/// Model reprezentujący Bossa z Elden Ring API.
-///
-/// Zawiera metody do konwersji z/do JSON (komunikacja z API)
-/// oraz z/do Map (zapis w lokalnej bazie sqflite).
+
 class Boss {
   final String id;
   final String name;
@@ -23,7 +20,6 @@ class Boss {
     required this.healthPoints,
   });
 
-  /// Tworzy obiekt Boss z mapy JSON zwróconej przez API.
   factory Boss.fromJson(Map<String, dynamic> json) {
     return Boss(
       id: json['id']?.toString() ?? '',
@@ -39,8 +35,6 @@ class Boss {
     );
   }
 
-  /// Konwertuje obiekt do mapy zapisywanej w sqflite.
-  /// Listy są zapisywane jako string JSON.
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -53,7 +47,6 @@ class Boss {
     };
   }
 
-  /// Tworzy obiekt Boss z mapy odczytanej z sqflite.
   factory Boss.fromMap(Map<String, dynamic> map) {
     return Boss(
       id: map['id'] as String,

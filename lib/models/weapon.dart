@@ -1,10 +1,6 @@
 import 'dart:convert';
 
-/// Reprezentuje pojedynczy wpis statystyki broni,
-/// np. {name: "Phy", amount: 101} albo {name: "Str", scaling: "B"}.
-///
-/// Ujednolicamy oba przypadki do pary (name, value), gdzie value
-/// jest tekstem gotowym do wyświetlenia w UI.
+
 class StatEntry {
   final String name;
   final String value;
@@ -27,8 +23,7 @@ class StatEntry {
   );
 }
 
-/// Pomocnicze funkcje do (de)serializacji listy [StatEntry] z/do JSON-a
-/// przechowywanego jako string w bazie sqflite.
+
 List<StatEntry> _statListFromJson(dynamic raw) {
   if (raw == null) return [];
   return (raw as List<dynamic>)
@@ -47,7 +42,7 @@ String _statListToEncoded(List<StatEntry> stats) {
   return jsonEncode(stats.map((e) => e.toJson()).toList());
 }
 
-/// Model reprezentujący Broń z Elden Ring API.
+
 class Weapon {
   final String id;
   final String name;
@@ -73,7 +68,7 @@ class Weapon {
     required this.scalesWith,
   });
 
-  /// Tworzy obiekt Weapon z mapy JSON zwróconej przez API.
+
   factory Weapon.fromJson(Map<String, dynamic> json) {
     return Weapon(
       id: json['id']?.toString() ?? '',
@@ -91,7 +86,7 @@ class Weapon {
     );
   }
 
-  /// Konwertuje obiekt do mapy zapisywanej w sqflite.
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -107,7 +102,7 @@ class Weapon {
     };
   }
 
-  /// Tworzy obiekt Weapon z mapy odczytanej z sqflite.
+
   factory Weapon.fromMap(Map<String, dynamic> map) {
     return Weapon(
       id: map['id'] as String,
