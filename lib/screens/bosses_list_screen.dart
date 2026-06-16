@@ -16,12 +16,20 @@ class BossesListScreen extends StatefulWidget {
 }
 
 class _BossesListScreenState extends State<BossesListScreen> {
+  final TextEditingController _searchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<BossProvider>().fetchBosses();
     });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -58,10 +66,37 @@ class _BossesListScreenState extends State<BossesListScreen> {
                   style: TextStyle(color: Colors.white, fontSize: 12),
                 ),
               ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
+              child: TextField(
+                controller: _searchController,
+                onChanged: (value) =>
+                    context.read<BossProvider>().setSearchQuery(value),
+                decoration: InputDecoration(
+                  hintText: 'Szukaj bossa...',
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: provider.searchQuery.isNotEmpty
+                      ? IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      _searchController.clear();
+                      context.read<BossProvider>().setSearchQuery('');
+                    },
+                  )
+                      : null,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                ),
+              ),
+            ),
             Expanded(
               child: RefreshIndicator(
                 onRefresh: () => provider.fetchBosses(forceRefresh: true),
-                child: ListView.builder(
+                child: provider.bosses.isEmpty
+                    ? const Center(child: Text('Brak wyników wyszukiwania.'))
+                    : ListView.builder(
                   itemCount: provider.bosses.length,
                   itemBuilder: (context, index) {
                     final boss = provider.bosses[index];

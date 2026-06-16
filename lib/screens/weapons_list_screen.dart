@@ -16,12 +16,20 @@ class WeaponsListScreen extends StatefulWidget {
 }
 
 class _WeaponsListScreenState extends State<WeaponsListScreen> {
+  final TextEditingController _searchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<WeaponProvider>().fetchWeapons();
     });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -58,10 +66,37 @@ class _WeaponsListScreenState extends State<WeaponsListScreen> {
                   style: TextStyle(color: Colors.white, fontSize: 12),
                 ),
               ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
+              child: TextField(
+                controller: _searchController,
+                onChanged: (value) =>
+                    context.read<WeaponProvider>().setSearchQuery(value),
+                decoration: InputDecoration(
+                  hintText: 'Szukaj broni...',
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: provider.searchQuery.isNotEmpty
+                      ? IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      _searchController.clear();
+                      context.read<WeaponProvider>().setSearchQuery('');
+                    },
+                  )
+                      : null,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                ),
+              ),
+            ),
             Expanded(
               child: RefreshIndicator(
                 onRefresh: () => provider.fetchWeapons(forceRefresh: true),
-                child: ListView.builder(
+                child: provider.weapons.isEmpty
+                    ? const Center(child: Text('Brak wyników wyszukiwania.'))
+                    : ListView.builder(
                   itemCount: provider.weapons.length,
                   itemBuilder: (context, index) {
                     final weapon = provider.weapons[index];
@@ -71,7 +106,8 @@ class _WeaponsListScreenState extends State<WeaponsListScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => WeaponDetailsScreen(weapon: weapon),
+                            builder: (_) =>
+                                WeaponDetailsScreen(weapon: weapon),
                           ),
                         );
                       },
