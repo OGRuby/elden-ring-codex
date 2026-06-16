@@ -6,6 +6,8 @@ import '../models/weapon.dart';
 import '../services/api_service.dart';
 import '../providers/favorites_provider.dart';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
+
 class WeaponDetailsScreen extends StatefulWidget {
   final Weapon weapon;
 
@@ -27,6 +29,10 @@ class _WeaponDetailsScreenState extends State<WeaponDetailsScreen> {
     _weapon = widget.weapon;
     context.read<FavoritesProvider>().loadFavorites();
     _loadFreshDetails();
+    FirebaseAnalytics.instance.logEvent(
+      name: 'view_weapon_details',
+      parameters: {'weapon_name': _weapon.name},
+    );
   }
 
   Future<void> _loadFreshDetails() async {

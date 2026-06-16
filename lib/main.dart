@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 
 import 'providers/boss_provider.dart';
 import 'providers/weapon_provider.dart';
@@ -12,7 +16,16 @@ import 'screens/weapons_list_screen.dart';
 import 'screens/favorites_screen.dart';
 import 'screens/settings_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
+
   runApp(const EldenRingCodexApp());
 }
 
@@ -32,6 +45,7 @@ class EldenRingCodexApp extends StatelessWidget {
         builder: (context, themeProvider, _) {
           return MaterialApp(
             title: 'Elden Ring Codex',
+            debugShowCheckedModeBanner: false,
             theme: ThemeData(
               colorScheme: ColorScheme.fromSeed(
                 seedColor: const Color(0xFFC9A876),
@@ -78,10 +92,15 @@ class _HomeScreenState extends State<HomeScreen> {
       body: _screens[_currentIndex],
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,
-        onDestinationSelected: (index) {
+        onDestinationSelected: (index) async {
           setState(() {
             _currentIndex = index;
           });
+          final tabNames = ['bosses', 'weapons', 'favorites', 'settings'];
+          await FirebaseAnalytics.instance.logEvent(
+            name: 'tab_changed',
+            parameters: {'tab': tabNames[index]},
+          );
         },
         destinations: [
           NavigationDestination(

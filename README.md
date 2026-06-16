@@ -1,17 +1,24 @@
-# elden_ring_codex
+# Elden Ring Codex
 
-A new Flutter project.
+Aplikacja mobilna stworzona we Flutterze prezentująca dane z Elden Ring API.
 
-## Getting Started
+## Opis
 
-This project is a starting point for a Flutter application.
+Elden Ring Codex to encyklopedia świata gry Elden Ring. Aplikacja pobiera dane z REST API (eldenring.fanapis.com) i wyświetla informacje o bossach oraz broniach dostępnych w grze.
 
-A few resources to get you started if this is your first Flutter project:
+## Funkcjonalności
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+- Lista bossów i broni z obrazkami
+- Ekran szczegółów każdego elementu
+- Wyszukiwanie po nazwie
+- Dodawanie do ulubionych
+- Tryb offline (dane przechowywane lokalnie w SQLite)
+- Manualne odświeżanie danych (pull-to-refresh)
+- Przełącznik ciemnego/jasnego motywu
+- Reset lokalnego cache
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+
+## Źródło danych
+
+https://eldenring.fanapis.com

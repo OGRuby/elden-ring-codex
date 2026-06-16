@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "909099485014",
+    "project_id": "elden-ring-codex",
+    "storage_bucket": "elden-ring-codex.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:909099485014:android:bfa9eedc25ea356e7af8f7",
+        "android_client_info": {
+          "package_name": "com.example.elden_ring_codex"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmq4L7nZRgo84uB0m9LWDdDJhVpzQeQrk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -6,6 +6,8 @@ import '../models/boss.dart';
 import '../services/api_service.dart';
 import '../providers/favorites_provider.dart';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
+
 class BossDetailsScreen extends StatefulWidget {
   final Boss boss;
 
@@ -27,6 +29,10 @@ class _BossDetailsScreenState extends State<BossDetailsScreen> {
     _boss = widget.boss;
     context.read<FavoritesProvider>().loadFavorites();
     _loadFreshDetails();
+    FirebaseAnalytics.instance.logEvent(
+      name: 'view_boss_details',
+      parameters: {'boss_name': _boss.name},
+    );
   }
 
   Future<void> _loadFreshDetails() async {

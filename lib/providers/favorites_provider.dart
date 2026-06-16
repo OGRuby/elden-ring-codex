@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 
 import '../services/database_service.dart';
@@ -26,12 +27,20 @@ class FavoritesProvider extends ChangeNotifier {
   }) async {
     if (isFavorite(id, type)) {
       await _databaseService.removeFavorite(id: id, type: type);
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'remove_from_favorites',
+        parameters: {'item_name': name, 'item_type': type},
+      );
     } else {
       await _databaseService.addFavorite(
         id: id,
         type: type,
         name: name,
         image: image,
+      );
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'add_to_favorites',
+        parameters: {'item_name': name, 'item_type': type},
       );
     }
     await loadFavorites();
